@@ -9,8 +9,12 @@ branches:
 build: off
 
 install:
-  - java -jar ./artifacts/app-mbank.jar &
+  # запускаем SUT (запоминаем информацию о процессе в переменной $App)
+  -  java -jar ./artifacts/app-order.jar &
 
 build_script:
-  -  chmod +x gradlew
-  - ./gradlew test --info
+  - ps:  chmod +x gradlew
+  - ps: ./gradlew test --info "-Dselenide.headless=true"  # стартуем Selenide в Headless-режиме (см.ниже)
+
+on_finish:
+  - ps: Stop-Process -Id $App.Id  # оставливаем SUT
